@@ -1,5 +1,7 @@
-FROM webcenter/openjdk-jre:8
-MAINTAINER Sebastien LANGOUREAUX <linuxworkgroup@hotmail.com>
+#FROM webcenter/openjdk-jre:8
+FROM openjdk:7-jre
+#MAINTAINER Sebastien LANGOUREAUX <linuxworkgroup@hotmail.com>
+MAINTAINER wangyanbin@dayang.com.cn
 
 
 # Update distro and install some packages

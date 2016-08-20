@@ -1,5 +1,6 @@
 # Changelog
-
+**v3.0.3
+  - Use ActiveMQ 5.5.1
 **v3.0.2
   - Upgrade to ActiveMQ 5.13.2
   - Add parameter to disable auth
