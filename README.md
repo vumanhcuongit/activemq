@@ -215,7 +215,11 @@ Below is the complete list of available options that can be used to customize yo
 
 - **ACTIVEMQ_STATIC_TOPICS**: The list of topics separated by comma witch is created when ActiveMQ start.
 - **ACTIVEMQ_STATIC_QUEUES**: The list of queues separated by comma witch is created when ActiveMQ start.
-
+- **ACTIVEMQ_ZKADDRESS**: zkaddress, default empty. if not empty, will use Replicated LevelDB persistenceAdapter. sample: "zoo1.example.org:2181,zoo2.example.org:2181,zoo3.example.org:2181"
+- **ACTIVEMQ_ZKPASSWORD**: default empty
+- **ACTIVEMQ_REPLICAS**: default 3
+- **ACTIVEMQ_ZKPATH**: default /activemq/leveldb-stores
+- **ACTIVEMQ_HOSTNAME**: default empty, will auto get 
 
 ## Advance configuration
 

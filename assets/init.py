@@ -145,7 +145,7 @@ class ServiceRun():
         self.replace_all(ACTIVEMQ_CONF + "/log4j.properties", "log4j\.logger\.org\.apache\.activemq\.audit=[^,]+", "log4j.logger.org.apache.activemq.audit=" + loglevel)
 
 
-    def do_setting_activemq_main(self, name, messageLimit, storageUsage, tempUsage, maxConnection, frameSize, topics, queues, enabledScheduler, enabledAuth):
+    def do_setting_activemq_main(self, name, messageLimit, storageUsage, tempUsage, maxConnection, frameSize, topics, queues, enabledScheduler, enabledAuth, zkAddress="", zkPassword="", replicas="3", zkPath ="/activemq/leveldb-stores", hostname="" ):
 
         if name is None or name == "":
             raise KeyError("You must set the name")
@@ -217,6 +217,24 @@ class ServiceRun():
             staticRoute += "</destinations>\n"
 
             self.replace_all(ACTIVEMQ_CONF + "/activemq.xml", '</broker>', staticRoute + '</broker>')
+            
+        # process Replicated LevelDB persistenceAdapter
+        if zkAddress != "":
+            # <kahaDB directory="${activemq.data}/kahadb"/>
+            xml_string = """<replicatedLevelDB
+                  directory="${{activemq.data}}"
+                  replicas="{0}"
+                  zkAddress="{1}"
+                  bind="tcp://0.0.0.0:0"
+                  zkPassword="{2}"
+                  zkPath="{3}"
+                  hostname="{4}"
+                  securityToken="same_securityToken"
+                  sync="quorum_mem"
+                  />\n"""
+            replicatedLevelDB = xml_string.format(replicas, 
+                zkAddress, zkPassword, zkPath, hostname)
+            self.replace_all(ACTIVEMQ_CONF + "/activemq.xml", '<kahaDB directory=".*/>', replicatedLevelDB)
 
     def do_setting_activemq_wrapper(self, minMemoryInMB, maxMemoryInMb):
 
@@ -307,7 +325,12 @@ if __name__ == '__main__':
         serviceRun.do_setting_activemq_log4j(os.getenv('ACTIVEMQ_LOGLEVEL'))
 
     # We set the main parameters
-    serviceRun.do_setting_activemq_main(os.getenv('ACTIVEMQ_NAME', 'localhost'), os.getenv('ACTIVEMQ_PENDING_MESSAGE_LIMIT', '1000'), os.getenv('ACTIVEMQ_STORAGE_USAGE', '100 gb'), os.getenv('ACTIVEMQ_TEMP_USAGE', '50 gb'), os.getenv('ACTIVEMQ_MAX_CONNECTION', '1000'), os.getenv('ACTIVEMQ_FRAME_SIZE', '104857600'), os.getenv('ACTIVEMQ_STATIC_TOPICS'), os.getenv('ACTIVEMQ_STATIC_QUEUES'), os.getenv('ACTIVEMQ_ENABLED_SCHEDULER', 'true'), os.getenv('ACTIVEMQ_ENABLED_AUTH', 'true'))
+    serviceRun.do_setting_activemq_main(os.getenv('ACTIVEMQ_NAME', 'localhost'), os.getenv('ACTIVEMQ_PENDING_MESSAGE_LIMIT', '1000'), os.getenv('ACTIVEMQ_STORAGE_USAGE', '100 gb'), os.getenv('ACTIVEMQ_TEMP_USAGE', '50 gb'), os.getenv('ACTIVEMQ_MAX_CONNECTION', '1000'), os.getenv('ACTIVEMQ_FRAME_SIZE', '104857600'), os.getenv('ACTIVEMQ_STATIC_TOPICS'), os.getenv('ACTIVEMQ_STATIC_QUEUES'), os.getenv('ACTIVEMQ_ENABLED_SCHEDULER', 'true'), os.getenv('ACTIVEMQ_ENABLED_AUTH', 'true'),
+        os.getenv('ACTIVEMQ_ZKADDRESS', ''),
+        os.getenv('ACTIVEMQ_ZKPASSWORD', ''),
+        os.getenv('ACTIVEMQ_REPLICAS', '3'),
+        os.getenv('ACTIVEMQ_ZKPATH', '/activemq/leveldb-stores'),
+        os.getenv('ACTIVEMQ_HOSTNAME', ''))
 
     # We setting wrapper
     serviceRun.do_setting_activemq_wrapper(os.getenv('ACTIVEMQ_MIN_MEMORY', '128'), os.getenv('ACTIVEMQ_MAX_MEMORY', '1024'))

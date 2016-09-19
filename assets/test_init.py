@@ -17,7 +17,7 @@ class InitTestCase(unittest.TestCase):
         shutil.copy2("test/fixtures/wrapper.conf", "test/tmp/bin/linux-x86-64/")
         shutil.copy2("test/fixtures/activemq", "test/tmp/bin/linux-x86-64/")
         init.ACTIVEMQ_HOME = "test/tmp";
-	init.ACTIVEMQ_CONF = init.ACTIVEMQ_HOME + '/conf'
+        init.ACTIVEMQ_CONF = init.ACTIVEMQ_HOME + '/conf'
 
 
     #@classmethod
@@ -35,16 +35,16 @@ class InitTestCase(unittest.TestCase):
         file.close()
 
     def test_do_setting_activemq_credential(self):
-	""" Check the function do_setting_activemq_credential """
-	init.do_setting_activemq_credential("user", "password")
+        """ Check the function do_setting_activemq_credential """
+        init.do_setting_activemq_credential("user", "password")
 
 
-	file = open(init.ACTIVEMQ_HOME +'/conf/credentials.properties', 'r')
-	contend = file.read()
+        file = open(init.ACTIVEMQ_HOME +'/conf/credentials.properties', 'r')
+        contend = file.read()
         file.close()
 
-	self.assertRegexpMatches(contend, "activemq\.username=user", "Problem when add user on credentials.properties")
-	self.assertRegexpMatches(contend, "activemq\.password=password", "Problem when add user on credentials.properties")
+        self.assertRegexpMatches(contend, "activemq\.username=user", "Problem when add user on credentials.properties")
+        self.assertRegexpMatches(contend, "activemq\.password=password", "Problem when add user on credentials.properties")
 
 
 
@@ -119,25 +119,25 @@ class InitTestCase(unittest.TestCase):
         self.assertRegexpMatches(contend, "<destinations>\s*<topic physicalName=\"topic1\"\s*/>\s*<topic physicalName=\"topic2\"\s*/>\s*<topic physicalName=\"topic3\"\s*/>\s*<queue physicalName=\"queue1\"\s*/>\s*<queue physicalName=\"queue2\"\s*/>\s*<queue physicalName=\"queue3\"\s*/>\s*</destinations>", "Problem with static topic and queue")
 
         rightManagement = """<plugins>
-      		             <!--  use JAAS to authenticate using the login.config file on the classpath to configure JAAS -->
-      		             <jaasAuthenticationPlugin configuration="activemq" />
-		                 <authorizationPlugin>
-        		            <map>
-          			            <authorizationMap>
-            				        <authorizationEntries>
-              					        <authorizationEntry queue=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
-              					        <authorizationEntry topic=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
-              					        <authorizationEntry topic="ActiveMQ.Advisory.>" read="admins,reads,writes,owners" write="admins,reads,writes,owners" admin="admins,reads,writes,owners"/>
-            				        </authorizationEntries>
+                                   <!--  use JAAS to authenticate using the login.config file on the classpath to configure JAAS -->
+                                   <jaasAuthenticationPlugin configuration="activemq" />
+                                 <authorizationPlugin>
+                                    <map>
+                                              <authorizationMap>
+                                                    <authorizationEntries>
+                                                              <authorizationEntry queue=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
+                                                              <authorizationEntry topic=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
+                                                              <authorizationEntry topic="ActiveMQ.Advisory.>" read="admins,reads,writes,owners" write="admins,reads,writes,owners" admin="admins,reads,writes,owners"/>
+                                                    </authorizationEntries>
 
-            				        <!-- let's assign roles to temporary destinations. comment this entry if we don't want any roles assigned to temp destinations  -->
-            				        <tempDestinationAuthorizationEntry>
-              					        <tempDestinationAuthorizationEntry read="tempDestinationAdmins" write="tempDestinationAdmins" admin="tempDestinationAdmins"/>
-           				            </tempDestinationAuthorizationEntry>
-          			            </authorizationMap>
-        		            </map>
-      		             </authorizationPlugin>
-	                     </plugins>\n"""
+                                                    <!-- let's assign roles to temporary destinations. comment this entry if we don't want any roles assigned to temp destinations  -->
+                                                    <tempDestinationAuthorizationEntry>
+                                                              <tempDestinationAuthorizationEntry read="tempDestinationAdmins" write="tempDestinationAdmins" admin="tempDestinationAdmins"/>
+                                                       </tempDestinationAuthorizationEntry>
+                                              </authorizationMap>
+                                    </map>
+                                   </authorizationPlugin>
+                             </plugins>\n"""
 
         self.assertRegexpMatches(contend, rightManagement, "Problem with inject right management")
 
@@ -181,13 +181,13 @@ class InitTestCase(unittest.TestCase):
         self.assertNotRegexpMatches(contend, "admin activemq", "Problem when remove the default value on jmx.password")
 
 
-	file = open(init.ACTIVEMQ_HOME +'/conf/credentials.properties', 'r')
+        file = open(init.ACTIVEMQ_HOME +'/conf/credentials.properties', 'r')
         contend = file.read()
         file.close()
 
         self.assertNotRegexpMatches(contend, "activemq\.username=system", "Problem when remove default user on credentials.properties")
         self.assertNotRegexpMatches(contend, "activemq\.password=manager", "Problem when remove default user on credentials.properties")
-	self.assertNotRegexpMatches(contend, "guest\.password=password", "Problem when remove default user on credentials.properties")
+        self.assertNotRegexpMatches(contend, "guest\.password=password", "Problem when remove default user on credentials.properties")
 
 
 
@@ -214,7 +214,7 @@ class InitTestCase(unittest.TestCase):
 
         self.assertRegexpMatches(contend, "set.default.ACTIVEMQ_DATA=/data/activemq", "Problem when init the wrapper.conf")
         self.assertRegexpMatches(contend, "wrapper.logfile=/var/log/activemq/wrapper.log", "Problem when init the wrapper.conf")
-	self.assertRegexpMatches(contend, "set.default.ACTIVEMQ_CONF=%ACTIVEMQ_BASE%/conf.tmp", "Problem when init the wrapper.conf")
+        self.assertRegexpMatches(contend, "set.default.ACTIVEMQ_CONF=%ACTIVEMQ_BASE%/conf.tmp", "Problem when init the wrapper.conf")
 
         # We check the value on log4j
         file = open(init.ACTIVEMQ_HOME +'/conf/log4j.properties', 'r')
@@ -294,25 +294,25 @@ class InitTestCase(unittest.TestCase):
         self.assertNotRegexpMatches(contend, "<destinations>.*</destinations>", "Problem with the default value on activemq.xml")
 
         rightManagement = """<plugins>
-      		             <!--  use JAAS to authenticate using the login.config file on the classpath to configure JAAS -->
-      		             <jaasAuthenticationPlugin configuration="activemq" />
-		                 <authorizationPlugin>
-        		            <map>
-          			            <authorizationMap>
-            				        <authorizationEntries>
-              					        <authorizationEntry queue=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
-              					        <authorizationEntry topic=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
-              					        <authorizationEntry topic="ActiveMQ.Advisory.>" read="admins,reads,writes,owners" write="admins,reads,writes,owners" admin="admins,reads,writes,owners"/>
-            				        </authorizationEntries>
+                                   <!--  use JAAS to authenticate using the login.config file on the classpath to configure JAAS -->
+                                   <jaasAuthenticationPlugin configuration="activemq" />
+                                 <authorizationPlugin>
+                                    <map>
+                                              <authorizationMap>
+                                                    <authorizationEntries>
+                                                              <authorizationEntry queue=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
+                                                              <authorizationEntry topic=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
+                                                              <authorizationEntry topic="ActiveMQ.Advisory.>" read="admins,reads,writes,owners" write="admins,reads,writes,owners" admin="admins,reads,writes,owners"/>
+                                                    </authorizationEntries>
 
-            				        <!-- let's assign roles to temporary destinations. comment this entry if we don't want any roles assigned to temp destinations  -->
-            				        <tempDestinationAuthorizationEntry>
-              					        <tempDestinationAuthorizationEntry read="tempDestinationAdmins" write="tempDestinationAdmins" admin="tempDestinationAdmins"/>
-           				            </tempDestinationAuthorizationEntry>
-          			            </authorizationMap>
-        		            </map>
-      		             </authorizationPlugin>
-	                     </plugins>\n"""
+                                                    <!-- let's assign roles to temporary destinations. comment this entry if we don't want any roles assigned to temp destinations  -->
+                                                    <tempDestinationAuthorizationEntry>
+                                                              <tempDestinationAuthorizationEntry read="tempDestinationAdmins" write="tempDestinationAdmins" admin="tempDestinationAdmins"/>
+                                                       </tempDestinationAuthorizationEntry>
+                                              </authorizationMap>
+                                    </map>
+                                   </authorizationPlugin>
+                             </plugins>\n"""
 
         self.assertRegexpMatches(contend, rightManagement, "Problem with the default value on activemq.xml")
 
@@ -365,7 +365,7 @@ class InitTestCase(unittest.TestCase):
         os.environ["ACTIVEMQ_STATIC_TOPICS"] = "topic1;topic2"
         os.environ["ACTIVEMQ_STATIC_QUEUES"] = "queue1;queue2;queue3"
         os.environ["ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT"] = "true"
-	os.environ["ACTIVEMQ_ENABLED_SCHEDULER"] = "true"
+        os.environ["ACTIVEMQ_ENABLED_SCHEDULER"] = "true"
 
 
 
@@ -434,29 +434,29 @@ class InitTestCase(unittest.TestCase):
         self.assertRegexpMatches(contend, "<tempUsage limit=\"5 gb\"/>", "Problem with set the value on activemq.xml")
         self.assertRegexpMatches(contend, "<transportConnector .*\?maximumConnections=10.*/>", "Problem with set the value on activemq.xml")
         self.assertRegexpMatches(contend, "<transportConnector .*wireFormat.maxFrameSize=2000000.*/>", "Problem with set the value on activemq.xml")
-	self.assertRegexpMatches(contend, "<broker schedulerSupport=\"true\"", "Problem with set the value on activemq.xml")
+        self.assertRegexpMatches(contend, "<broker schedulerSupport=\"true\"", "Problem with set the value on activemq.xml")
         self.assertRegexpMatches(contend, "<destinations>\s*<topic physicalName=\"topic1\"\s*/>\s*<topic physicalName=\"topic2\"\s*/>\s*<queue physicalName=\"queue1\"\s*/>\s*<queue physicalName=\"queue2\"\s*/>\s*<queue physicalName=\"queue3\"\s*/>\s*</destinations>", "Problem with set the value on activemq.xml")
 
         rightManagement = """<plugins>
-      		             <!--  use JAAS to authenticate using the login.config file on the classpath to configure JAAS -->
-      		             <jaasAuthenticationPlugin configuration="activemq" />
-		                 <authorizationPlugin>
-        		            <map>
-          			            <authorizationMap>
-            				        <authorizationEntries>
-              					        <authorizationEntry queue=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
-              					        <authorizationEntry topic=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
-              					        <authorizationEntry topic="ActiveMQ.Advisory.>" read="admins,reads,writes,owners" write="admins,reads,writes,owners" admin="admins,reads,writes,owners"/>
-            				        </authorizationEntries>
+                                   <!--  use JAAS to authenticate using the login.config file on the classpath to configure JAAS -->
+                                   <jaasAuthenticationPlugin configuration="activemq" />
+                                 <authorizationPlugin>
+                                    <map>
+                                              <authorizationMap>
+                                                    <authorizationEntries>
+                                                              <authorizationEntry queue=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
+                                                              <authorizationEntry topic=">" read="admins,reads,writes,owners" write="admins,writes,owners" admin="admins,owners" />
+                                                              <authorizationEntry topic="ActiveMQ.Advisory.>" read="admins,reads,writes,owners" write="admins,reads,writes,owners" admin="admins,reads,writes,owners"/>
+                                                    </authorizationEntries>
 
-            				        <!-- let's assign roles to temporary destinations. comment this entry if we don't want any roles assigned to temp destinations  -->
-            				        <tempDestinationAuthorizationEntry>
-              					        <tempDestinationAuthorizationEntry read="tempDestinationAdmins" write="tempDestinationAdmins" admin="tempDestinationAdmins"/>
-           				            </tempDestinationAuthorizationEntry>
-          			            </authorizationMap>
-        		            </map>
-      		             </authorizationPlugin>
-	                     </plugins>\n"""
+                                                    <!-- let's assign roles to temporary destinations. comment this entry if we don't want any roles assigned to temp destinations  -->
+                                                    <tempDestinationAuthorizationEntry>
+                                                              <tempDestinationAuthorizationEntry read="tempDestinationAdmins" write="tempDestinationAdmins" admin="tempDestinationAdmins"/>
+                                                       </tempDestinationAuthorizationEntry>
+                                              </authorizationMap>
+                                    </map>
+                                   </authorizationPlugin>
+                             </plugins>\n"""
 
         self.assertRegexpMatches(contend, rightManagement, "Problem with set the value on activemq.xml")
 
