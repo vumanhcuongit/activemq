@@ -28,7 +28,7 @@ Dockerfile to build a ActiveMQ container image.
 
 ## Version
 
-Current Version: **5.5.1**
+Current Version: **5.13.4**
 
 # Hardware Requirements
 
