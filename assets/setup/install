@@ -81,6 +81,6 @@ command=/opt/activemq/bin/activemq console
 user=root
 autostart=true
 autorestart=true
-stdout_logfile=${LOG_DIR}/activemq/supervisor/%(program_name)s.log
-stderr_logfile=${LOG_DIR}/activemq/supervisor/%(program_name)s.log
+stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
 EOF
