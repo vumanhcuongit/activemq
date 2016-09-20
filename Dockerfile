@@ -19,16 +19,16 @@ RUN apt-get update && \
 
 # Lauch app install
 COPY assets/setup/ /app/setup/
-RUN chmod +x /app/setup/install
-RUN /app/setup/install
+RUN chmod +x /app/setup/install &&\
+    /app/setup/install
 
 
 # Copy the app setting
-COPY assets/init.py /app/init.py
-COPY assets/run.sh /app/run.sh
-RUN chmod +x /app/init.py
-RUN chmod +x /app/run.sh
+COPY assets/init.py assets/run.sh /app/
 
+RUN chmod +x /app/* &&\
+    mkdir -p /var/log/activemq/supervisor
+    
 # Expose all port
 EXPOSE 8161
 EXPOSE 61616
