@@ -220,7 +220,7 @@ Below is the complete list of available options that can be used to customize yo
 - **ACTIVEMQ_ZKPASSWORD**: default empty
 - **ACTIVEMQ_REPLICAS**: default 3
 - **ACTIVEMQ_ZKPATH**: default /activemq/leveldb-stores
-- **ACTIVEMQ_HOSTNAME**: default empty, will auto get 
+- **ACTIVEMQ_HOSTNAME**: default "${activemq.host_ip}", will use ip
 - **ACTIVEMQ_OTHER_OPTS**: default empty, other optons to java
 
 ## Advance configuration

@@ -349,7 +349,7 @@ if __name__ == '__main__':
         os.getenv('ACTIVEMQ_ZKPASSWORD', ''),
         os.getenv('ACTIVEMQ_REPLICAS', '3'),
         os.getenv('ACTIVEMQ_ZKPATH', '/activemq/leveldb-stores'),
-        os.getenv('ACTIVEMQ_HOSTNAME', ''))
+        os.getenv('ACTIVEMQ_HOSTNAME', '${activemq.host_ip}'))
 
     # We setting mem
     mem = os.getenv('ACTIVEMQ_OPTS_MEMORY', '')
