@@ -42,6 +42,7 @@ VOLUME ["/data/activemq"]
 VOLUME ["/var/log/activemq"]
 VOLUME ["/opt/activemq/conf"]
 
+ENV ACTIVEMQ_CONF=/opt/activemq/conf.tmp ACTIVEMQ_DATA=/opt/activemq/data
 WORKDIR /opt/activemq
 
 #ENTRYPOINT ["/app/init"]

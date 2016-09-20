@@ -198,6 +198,7 @@ Below is the complete list of available options that can be used to customize yo
 - **ACTIVEMQ_ENABLED_AUTH**: Permit to enabled the authentification in queue and topic (no anonymous access). Default to `true`
 - **ACTIVEMQ_MIN_MEMORY**: The init memory in MB that ActiveMQ take when start (it's like XMS). Default to `128` (128 MB)
 - **ACTIVEMQ_MAX_MEMORY**: The max memory in MB that ActiveMQ can take (it's like XMX). Default to `1024` (1024 MB)
+- **ACTIVEMQ_OPTS_MEMORY**: The java memory param, e.g.: "-Xms64M -Xmx1G" if set , will overwrite ACTIVEMQ_MIN_MEMORY and ACTIVEMQ_MAX_MEMORY
 
 - **ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT**: It's permit to remove all default login on ActiveMQ (Webconsole, broker and JMX). Default to `false`
 - **ACTIVEMQ_ADMIN_LOGIN**: The login for admin account (broker and web console). Default to `admin`
@@ -220,6 +221,7 @@ Below is the complete list of available options that can be used to customize yo
 - **ACTIVEMQ_REPLICAS**: default 3
 - **ACTIVEMQ_ZKPATH**: default /activemq/leveldb-stores
 - **ACTIVEMQ_HOSTNAME**: default empty, will auto get 
+- **ACTIVEMQ_OTHER_OPTS**: default empty, other optons to java
 
 ## Advance configuration
 

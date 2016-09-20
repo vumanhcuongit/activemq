@@ -236,6 +236,21 @@ class ServiceRun():
                 zkAddress, zkPassword, zkPath, hostname)
             self.replace_all(ACTIVEMQ_CONF + "/activemq.xml", '<kahaDB directory=".*/>', replicatedLevelDB)
 
+    def do_setting_activemq_ip(self):
+        line_ip = 'MQ_HOST_IP=`wget -q -O - http://169.254.169.250/2015-12-19/self/container/primary_ip`'
+        line_options = 'ACTIVEMQ_OPTS="$ACTIVEMQ_OPTS -Dactivemq.host_ip=${MQ_HOST_IP} $ACTIVEMQ_OTHER_OPTS"'
+          
+        self.add_end_file(ACTIVEMQ_HOME + "/bin/env",
+            line_ip + '\n' + line_options)
+        self.replace_all(ACTIVEMQ_CONF + "/activemq.xml",
+            '0\.0\.0\.0', '${activemq.host_ip}')
+        
+    
+    def do_setting_activemq_mem(self, memString):
+        self.replace_all(ACTIVEMQ_HOME + "/bin/env",
+            'ACTIVEMQ_OPTS_MEMORY=".*"',
+            'ACTIVEMQ_OPTS_MEMORY="{0}"'.format(memString) )
+
     def do_setting_activemq_wrapper(self, minMemoryInMB, maxMemoryInMb):
 
         if minMemoryInMB is None or minMemoryInMB < 0:
@@ -243,25 +258,29 @@ class ServiceRun():
 
         if maxMemoryInMb is None or maxMemoryInMb < 0:
             raise KeyError("You must set the maxMemory")
-
-        self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf", "#?wrapper\.java\.initmemory=\d+", 'wrapper.java.initmemory=' + str(minMemoryInMB))
-        self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf", "#?wrapper\.java\.maxmemory=\d+", 'wrapper.java.maxmemory=' + str(maxMemoryInMb))
+            
+        # -Xms64M -Xmx1024M        
+        self.do_setting_activemq_mem('-Xms{0}M -Xmx{1}M'.
+            format(minMemoryInMB,maxMemoryInMb))
 
 
     def do_init_activemq(self):
 
         # We change the activemq launcher to start activemq with activmq user
-        self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/activemq", "#RUN_AS_USER=", "RUN_AS_USER=activemq")
+        self.replace_all(ACTIVEMQ_HOME + "/bin/env", 'ACTIVEMQ_USER=""', 'ACTIVEMQ_USER="activemq"')
 
         # We change some macro on wrapper.conf to move data
-        self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf" ,"set\.default\.ACTIVEMQ_DATA=%ACTIVEMQ_BASE%\/data", "set.default.ACTIVEMQ_DATA=/data/activemq")
+        # has set in docker env ACTIVEMQ_DATA
+        # self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf" ,"set\.default\.ACTIVEMQ_DATA=%ACTIVEMQ_BASE%\/data", "set.default.ACTIVEMQ_DATA=/data/activemq")
 
         # Fix bug #4 "Cannot mount a custom activemq.xml"
-        self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf" ,"set\.default\.ACTIVEMQ_CONF=%ACTIVEMQ_BASE%/conf$", "set.default.ACTIVEMQ_CONF=%ACTIVEMQ_BASE%/conf.tmp")
+        # has set in docker env ACTIVEMQ_CONF
+        # self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf" ,"set\.default\.ACTIVEMQ_CONF=%ACTIVEMQ_BASE%/conf$", "set.default.ACTIVEMQ_CONF=%ACTIVEMQ_BASE%/conf.tmp")
 
         # We replace the log output
         self.replace_all(ACTIVEMQ_CONF + "/log4j.properties", "\$\{activemq\.base\}\/data\/", "/var/log/activemq/")
-        self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf" ,"wrapper\.logfile=%ACTIVEMQ_DATA%\/wrapper\.log", "wrapper.logfile=/var/log/activemq/wrapper.log")
+        # wrapper will not used
+        # self.replace_all(ACTIVEMQ_HOME + "/bin/linux-x86-64/wrapper.conf" ,"wrapper\.logfile=%ACTIVEMQ_DATA%\/wrapper\.log", "wrapper.logfile=/var/log/activemq/wrapper.log")
 
 
 if __name__ == '__main__':
@@ -332,5 +351,14 @@ if __name__ == '__main__':
         os.getenv('ACTIVEMQ_ZKPATH', '/activemq/leveldb-stores'),
         os.getenv('ACTIVEMQ_HOSTNAME', ''))
 
-    # We setting wrapper
-    serviceRun.do_setting_activemq_wrapper(os.getenv('ACTIVEMQ_MIN_MEMORY', '128'), os.getenv('ACTIVEMQ_MAX_MEMORY', '1024'))
+    # We setting mem
+    mem = os.getenv('ACTIVEMQ_OPTS_MEMORY', '')
+    if mem != "":
+        serviceRun.do_setting_activemq_mem(mem)
+    else:
+        serviceRun.do_setting_activemq_wrapper(os.getenv('ACTIVEMQ_MIN_MEMORY', '128'), os.getenv('ACTIVEMQ_MAX_MEMORY', '1024'))
+
+        
+    
+    # We set host ip, and support other options
+    serviceRun.do_setting_activemq_ip()
