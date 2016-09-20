@@ -238,7 +238,7 @@ class ServiceRun():
 
     def do_setting_activemq_ip(self):
         line_ip = 'MQ_HOST_IP=`wget -q -O - http://169.254.169.250/2015-12-19/self/container/primary_ip`'
-        line_options = 'ACTIVEMQ_OPTS="$ACTIVEMQ_OPTS -Dactivemq.host_ip=${MQ_HOST_IP} $ACTIVEMQ_OTHER_OPTS"'
+        line_options = 'ACTIVEMQ_OPTS="$ACTIVEMQ_OPTS -Dactivemq.host_ip=${MQ_HOST_IP:-0.0.0.0} $ACTIVEMQ_OTHER_OPTS"'
           
         self.add_end_file(ACTIVEMQ_HOME + "/bin/env",
             line_ip + '\n' + line_options)
