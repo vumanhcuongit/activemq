@@ -26,8 +26,7 @@ RUN chmod +x /app/setup/install &&\
 # Copy the app setting
 COPY assets/init.py assets/run.sh /app/
 
-RUN chmod +x /app/* &&\
-    mkdir -p /var/log/activemq/supervisor
+RUN chmod +x /app/*
     
 # Expose all port
 EXPOSE 8161
